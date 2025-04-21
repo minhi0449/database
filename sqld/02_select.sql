@@ -26,15 +26,4 @@ order by play_count desc;
 # play_count 열을 기준으로 내림차순(높은값부터) 정렬
 
 
-
 select version();
-
-
-
-
-
-
-
-
-
-
