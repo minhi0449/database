@@ -1,5 +1,4 @@
 
-
 CREATE SCHEMA apple_music;
 
 use apple_music;
