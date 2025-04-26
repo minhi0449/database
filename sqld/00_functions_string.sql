@@ -53,7 +53,10 @@ select lower(artist_name) as 아티스트_이름_소문자
 from artists;
 
 -- 2-2. 노래 제목이 모두 대소문자 섞여있을 때, 통일해서 소문자로 정리
-select lower(song_title) as song_lower from songs;
+SELECT 
+    LOWER(song_title) AS song_lower
+FROM
+    songs;
 
 -- 2-3. 국가명을 모두 소문자로 통일해서 보여주기
 select lower(country) as 국가명_소문자 
@@ -84,7 +87,7 @@ from users;
 -- 예제
 -- [오류] SUBSTRING('abcdef', 2, 3);
 -- 이유 : SQL 에서는 함수를 단독으로 실행할 수 없고, SELECT 문 안에서 사용해야 함
-select substring('abcedf', 2, 3) as result;
+SELECT SUBSTRING('abcedf', 2, 3) AS result;
 -- 결과 : bce
 -- substring(문자열, 시작위치, 길이)
 -- 시작위치 : 2 (b부터 시작) / 길이 : 3 (2부터 3,4) 까지 자르기
@@ -99,12 +102,14 @@ select substring('abcedf', 2, 3) as result;
 
 -- 예시 1: 이메일에서 도메인 추출
 -- 이메일 주소에서 '@' 다음의 도메인 부분만 추출하고 싶을 때
-select substring('user@example.com', position('@' in 'user@example.com')+1) as domain;
+SELECT 
+    SUBSTRING('user@example.com',
+        POSITION('@' IN 'user@example.com') + 1) AS domain;
 -- 결과 : example.com
 
 -- 예시 2: 전화번호 마스킹
 -- 개인정보 보호를 위해 전화번호 뒷자리를 마스킹할 때:
-select concat(substring('010-1234-5678', 1, 8), '****') as masked_phone;
+SELECT CONCAT(SUBSTRING('010-1234-5678', 1, 8), '****') AS masked_phone;
 /*
 	
 	결과 : 010-1234****
@@ -134,17 +139,151 @@ from users;
 
 
 -- 이메일 ID만 보기
-select substring(email, 1, locate('@', email) -1) as email_id
-from users;
+SELECT 
+    SUBSTRING(email,
+        1,
+        LOCATE('@', email) - 1) AS email_id
+FROM
+    users;
 
 -- 생일에서 월만 보기
-select substring(birth_date, 6, 2) 
-as birth_month 
-from users;
+SELECT 
+    SUBSTRING(birth_date, 6, 2) AS birth_month
+FROM
+    users;
 
 -- 노래 제목 미리 보기
-select substring(song_title, 1, 5) as title_preview
+SELECT 
+    SUBSTRING(song_title, 1, 5) AS title_preview
+FROM
+    songs;
+
+
+
+-- ============================================================
+-- UPPER() - 문자열을 대문자로 변환 (발음 : 어퍼)
+-- ============================================================
+-- 설명 : 모든 문자를 대문자로 변환합니다.
+-- 
+-- 사용법 : UPPER(문자열)
+
+/*
+	* 실무 활용:
+    - 검색 기능에서 대·소문자 구분 없이 검색할 때
+    - 데이터 정규화(표준화)가 필요할 때, 
+    - 코드나 식별자를 표준 형식으로 저장할 때
+*/
+
+-- ============================================================
+
+
+-- 기본 사용법 
+SELECT UPPER('hello world') AS 대문자_결과;
+-- 결과 : HELLO WORLD
+
+
+-- 혼합된 문자열 대문자로 반환
+SELECT UPPER('Hello World 123') AS 대문자_결과;
+-- 결과 : HELLO WORLD 123
+
+
+-- 한글은 영향 없음
+select upper('안녕하세요 Hello') as 대문자_결과;
+-- 결과 : 안녕하세요 HELLO
+-- cmd + d : 되지 않는 경우 - 한글 포함 문자열
+-- -> 내부 포맷터가 한글을 처리 못하는 경우 있음 (버그 수준이지만 흔함)
+
+
+-- 연습문제 4-1. 모든 아티스트 이름을 대문자로 표시하기
+select artist_name, upper(artist_name) as 대문자_이름 from Artists;
+
+-- 연습문제 4-2. 노래 제목을 대문자로 변환하여 표시하기
+select song_title, upper(song_title) as 대문자_제목
 from songs;
+
+-- 연습문제 4-3. 사용자 이름을 모두 대문자로 변환하기
+select username, upper(username) as 대문자_사용자명 from users;
+
+
+-- 4-4. UPPER() 를 사용하여 이메일 도메인 대문자로 변환하기
+
+select username, email, 
+concat(substring_index(email, '@', 1), '@',
+upper(SUBSTRING_INDEX(email, '@', -1)) ) as '변환된 이메일'
+from users;
+
+/*
+
+	1. select username, email: users 테이블에서 username과 email 열을 선택
+    2. concat(...): 세 부분을 이어붙입니다.
+    2-1. substring_indec(email, '@', 1) : 이메일에서 '@' 앞부분(사용자명) 추출
+    2-2. '@' : '@' 기호를 그대로 사용합니다.
+    2-3. upper(SUBSTRING_INDEX(email, '@', -1)) : 이메일에서 '@' 뒷부분(도메인)을
+		 추출하고 대문자로 변환
+	
+    SUBSTRING_INDEX() : 특정문자를 기준으로 문자열을 나누고, 원하는 부분만 가져오는 함수
+						두 번째 매개변수(-1): 음수일 경우 오른쪽에서 부터 찾습니다.
+*/
+
+
+-- ============================================================
+-- TRIM() - 문자열 앞뒤 공백 제거 (발음: 트림)
+-- ============================================================
+-- 설명: 문자열의 앞뒤 공백을 제거합니다.
+-- 
+-- 사용법: TRIM(문자열)
+/*
+	응용: 
+	LTRIM() - 왼쪽(앞) 공백만 제거
+	RTRIM() - 오른쪽(뒤) 공백만 제거
+	TRIM([BOTH|LEADING|TRAILING] [제거할문자] FROM 문자열)
+*/
+-- ============================================================
+
+
+-- 기본 사용법
+SELECT TRIM('    Hello World    ') AS 공백_제거_결과;
+-- 결과: 'Hello World'
+
+-- 왼쪽 공백만 제거
+SELECT LTRIM('    Hello World    ') AS 왼쪽_공백_제거;
+-- 결과: 'Hello World   '
+
+-- 오른쪽 공백만 제거
+SELECT RTRIM('    Hello World    ') AS 오른쪽_공백_제거;
+-- 결과: '   Hello World'
+
+
+-- 고급 기능 : TRIM() 함수는 공백 외에도 다른 문자를 제거할 수 있습니다.
+
+-- 특정 문자 제거 (양쪽 'x' 제거)
+SELECT TRIM(BOTH 'x' FROM 'xxxHello Worldxxx') AS 특정문자제거;
+-- 결과: 'Hello World'
+
+-- 특정 문자 왼쪽만 제거
+SELECT TRIM(LEADING 'x' FROM 'xxx_Hello World_xxx') AS '왼쪽_문자_(x)_제거';
+-- 결과: 'Hello Worldxxx'
+
+-- 특정 문자 오른쪽만 제거
+SELECT TRIM(TRAILING 'x' FROM 'xxx_Hello World_xxx') AS '오른쪽_문자_(x)_제거'; 
+-- 결과: 'xxxHello World'
+
+/*
+	실무 활용:
+    • 사용자 입력값 정제(사용자가 실수로 공백을 넣은 경우)
+	• 파일에서 가져온 데이터 정리
+    • 검색 기능에서 정확한 검색을 위한 전처리
+*/
+
+-- 포맷팅 / 코드 정렬 단축키 : cmd + B
+
+-- 연습문제 5-1. 
+
+
+
+
+
+
 
 
 
