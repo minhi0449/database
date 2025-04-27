@@ -1,21 +1,6 @@
 # Database Study  
 > 데이터베이스 공부 및 SQL 실습 (연습문제, ERD 모델링)
 
-| 챕터  | 내용  | 
-|------|------------------------------|
-| **ch01** | 데이터베이스 개요 및 MySQL 설치 |
-| **ch02** | SQL 기본 |
-| **ch03** | 제약조건 | 
-| **ch04** | SQL 고급 | 
-| **ch05** | 데이터베이스 개체 | 
-| **ch06** | 데이터 모델링 |
-| **ch07** | 정규화 |
-| **ch08** | 트랜잭션 |
-
-
-# ✨ Database Study
-> 데이터베이스 기초부터 고급 SQL까지 체계적으로 학습하고, ERD 모델링 및 실습을 통해 실무 감각을 키우는 프로젝트입니다.
-
 ## 🗂️ 프로젝트 구성
 
 | 디렉토리 | 설명 |
@@ -39,6 +24,19 @@
 | **ch07** | 정규화 (1NF, 2NF, 3NF, BCNF) |
 | **ch08** | 트랜잭션 관리 (ACID 특성, LOCK, 동시성 제어) |
 
+
+| 챕터  | 내용  | 
+|------|------------------------------|
+| **ch01** | 데이터베이스 개요 및 MySQL 설치 |
+| **ch02** | SQL 기본 |
+| **ch03** | 제약조건 | 
+| **ch04** | SQL 고급 | 
+| **ch05** | 데이터베이스 개체 | 
+| **ch06** | 데이터 모델링 |
+| **ch07** | 정규화 |
+| **ch08** | 트랜잭션 |
+
+
 ## 🎯 목표
 
 - **SQL 기본기 탄탄하게 다지기**
@@ -50,6 +48,14 @@
 - **Database**: MySQL 8.x
 - **ERD Tool**: MySQL Workbench
 - **문서화**: Markdown (`.md`) 포맷
+
+## 🛠️ 사용 기술
+
+| 분야        | 기술 스택 |
+|------------|-------------------------------------------------------------------------------------|
+| **Database**  | ![MySQL 8.x](https://img.shields.io/badge/MySQL%208.x-4479A1?style=flat&logo=mysql&logoColor=white) |
+| **ERD Tool**  | ![MySQL Workbench](https://img.shields.io/badge/MySQL%20Workbench-4479A1?style=flat&logo=mysql&logoColor=white) |
+| **문서화**    | ![Markdown](https://img.shields.io/badge/Markdown-.md-000000?style=flat&logo=markdown&logoColor=white) |
 
 ## 💡 특징
 
