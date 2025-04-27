@@ -25,16 +25,10 @@
 
 ## 사용 기술
 
-• **Database**: MySQL 8.0 ![MySQL 8.0](https://img.shields.io/badge/MySQL%208.x-4479A1?style=flat&logo=mysql&logoColor=white)
-• **ERD Tool**: MySQL Workbench ![MySQL Workbench](https://img.shields.io/badge/MySQL%20Workbench-4479A1?style=flat&logo=mysql&logoColor=white) 
-
-
-## 사용 기술
-
 | 분야        | 기술 스택 |
 |------------|-------------------------------------------------------------------------------------|
 | **Database**  | ![MySQL 8.0](https://img.shields.io/badge/MySQL%208.x-4479A1?style=flat&logo=mysql&logoColor=white) |
 | **ERD Tool**  | ![MySQL Workbench](https://img.shields.io/badge/MySQL%20Workbench-4479A1?style=flat&logo=mysql&logoColor=white) |
-| **문서화**    | ![Markdown](https://img.shields.io/badge/Markdown-.md-000000?style=flat&logo=markdown&logoColor=white) |
+
 
 
