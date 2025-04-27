@@ -17,7 +17,7 @@
 
 | 챕터 | 내용 | 챕터 | 내용 |
 |------|------|------|------|
-| **ch01** | 데이터베이스 개요 및 MySQL 설치 | **ch05** | 데이터베이스 개체 | 
+| **ch01** | 데이터베이스 개요 및 `MySQL` 설치 | **ch05** | 데이터베이스 개체 | 
 | **ch02** | SQL 기본 | **ch06** | 데이터 모델링 |
 | **ch03** | 제약조건 | **ch07** | 정규화 |
 | **ch04** | SQL 고급 | **ch08** | 트랜잭션 |
@@ -25,15 +25,15 @@
 
 ## 사용 기술
 
-- **Database**: MySQL 8.0
-- **ERD Tool**: MySQL Workbench
+• **Database**: MySQL 8.0 ![MySQL 8.0](https://img.shields.io/badge/MySQL%208.x-4479A1?style=flat&logo=mysql&logoColor=white)
+• **ERD Tool**: MySQL Workbench ![MySQL Workbench](https://img.shields.io/badge/MySQL%20Workbench-4479A1?style=flat&logo=mysql&logoColor=white) 
 
 
 ## 사용 기술
 
 | 분야        | 기술 스택 |
 |------------|-------------------------------------------------------------------------------------|
-| **Database**  | ![MySQL 8.x](https://img.shields.io/badge/MySQL%208.x-4479A1?style=flat&logo=mysql&logoColor=white) |
+| **Database**  | ![MySQL 8.0](https://img.shields.io/badge/MySQL%208.x-4479A1?style=flat&logo=mysql&logoColor=white) |
 | **ERD Tool**  | ![MySQL Workbench](https://img.shields.io/badge/MySQL%20Workbench-4479A1?style=flat&logo=mysql&logoColor=white) |
 | **문서화**    | ![Markdown](https://img.shields.io/badge/Markdown-.md-000000?style=flat&logo=markdown&logoColor=white) |
 
