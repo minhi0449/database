@@ -5,7 +5,7 @@
 
 | 디렉토리 | 설명 |
 |:--------|:-------------------------------|
-| **erd-modeling** | ERD 설계 및 모델링 파일 (MySQL Workbench 활용) |
+| **erd-modeling** | ERD 설계 및 모델링 파일 (![MySQL Workbench](https://img.shields.io/badge/MySQL%20Workbench-4479A1?style=flat&logo=mysql&logoColor=white) 활용) |
 | **exercises** | SQL 실습문제 및 풀이 |
 | **lectures** | 강의별 학습 정리 자료 |
 | **models** | 주요 데이터베이스 모델 파일 |
