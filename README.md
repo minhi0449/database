@@ -27,7 +27,7 @@
 
 | 분야        | 기술 스택 |
 |------------|-------------------------------------------------------------------------------------|
-| **Database**  | ![MySQL 8.0](https://img.shields.io/badge/MySQL%208.x-4479A1?style=flat&logo=mysql&logoColor=white) |
+| **Database**  | ![MySQL 8.0](https://img.shields.io/badge/MySQL%208.0-4479A1?style=flat&logo=mysql&logoColor=white) |
 | **ERD Tool**  | ![MySQL Workbench](https://img.shields.io/badge/MySQL%20Workbench-4479A1?style=flat&logo=mysql&logoColor=white) |
 
 
