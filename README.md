@@ -4,8 +4,8 @@
 ## 프로젝트 구성
 
 | 디렉토리 | 설명 |
-|:--------|:-------------------------------|
-| **erd-modeling** | ERD 설계 및 모델링 파일 (![MySQL Workbench](https://img.shields.io/badge/MySQL%20Workbench-4479A1?style=flat&logo=mysql&logoColor=white) 활용) |
+|--------|-------------------------------|
+| **erd-modeling** | ERD 설계 및 모델링 파일 (MySQL Workbench) 활용) |
 | **exercises** | SQL 실습문제 및 풀이 |
 | **lectures** | 강의별 학습 정리 자료 |
 | **models** | 주요 데이터베이스 모델 파일 |
@@ -20,19 +20,7 @@
 | **ch03** | 제약조건 (`PRIMARY KEY`, `FOREIGN KEY` 등) | **ch07** | 정규화 (`1NF`, `2NF`, `3NF`, `BCNF`) |
 | **ch04** | SQL 고급 (`서브쿼리`, `JOIN`, `집계함수` 등) | **ch08** | 트랜잭션 관리 (`ACID 특성`, `LOCK`, `동시성 제어`) |
 
-
-
-| 챕터  | 내용  | 
-|------|------------------------------|
-| **ch01** | 데이터베이스 개요 및 MySQL 설치 |
-| **ch02** | SQL 기본 |
-| **ch03** | 제약조건 | 
-| **ch04** | SQL 고급 | 
-| **ch05** | 데이터베이스 개체 | 
-| **ch06** | 데이터 모델링 |
-| **ch07** | 정규화 |
-| **ch08** | 트랜잭션 |
-
+---
 
 | 챕터 | 내용 | 챕터 | 내용 |
 |------|------|------|------|
@@ -42,11 +30,11 @@
 | **ch04** | SQL 고급 | **ch08** | 트랜잭션 |
 
 
-## 🛠️ 사용 기술
+## 사용 기술
 
-- **Database**: MySQL 8.x
+- **Database**: MySQL 8.0
 - **ERD Tool**: MySQL Workbench
-- **문서화**: Markdown (`.md`) 포맷
+
 
 ## 🛠️ 사용 기술
 
