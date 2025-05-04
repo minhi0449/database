@@ -354,6 +354,15 @@ select left(country, 2) as country_short from users;
 
 
 
+-- 4. Songs 테이블에서 노래 제목 중 'Love'를 'Heart' 로 바꾸는 쿼리
+select song_id, song_title, 
+replace(song_title, 'Love', 'Heart') as modified_title
+from songs
+where song_title like '%Love%';
+
+
+
+
 -- ============================================================
 -- RIGHT() - 라이트 (발음: 라-이트)
 -- ============================================================
@@ -387,17 +396,65 @@ from users;
 -- 
 -- 사용법 : REPEAT(문자열, 반복할 횟수) 
 --          → 반복할 대상, 몇 번 반복할지 숫자
+/*
+	1. 문자열 등장
+    2.'몇 번 반복할래 ?' 정하기
+    3. 그만큼 복붙 복붙 복붙해서 결과 만듬
+*/
 -- ============================================================
 
 
+-- 연습문제
+-- 1. "Hi"를 5번 반복해 출력해보자!
+select repeat("Hi ", 5) as repeated_hi;
 
 
+select username, repeat(username, 2) as double_username
+from users;
 
 
+-- 1-1. REPEAT() 와 구분자 함께 사용 
+select username, repeat(concat(username, ' | '), 2) as double_username22
+from users;
 
 
+-- 1.2. 문자열 연결 연산자 사용 (MySQL 에서는 CONCAT 사용)
+select username, username || ' * ' || username as double_username
+from users;
+/*
+	|| : MySQL 에서는 '논리 OR' 연산자 입니다.
+		 문자열을 합치는 연산자가 아님
+         (발음 : 버티컬 바 / vertical bar)
+    
+    
+*/
+
+select username, concat(username, ' * ', username) as double_username
+from users;
+
+-- ------------------------------------------------------------------
+-- 일반적인 SQL 문자열 함수 활용 예시 (실무)
+
+-- 1. 데이터 정제(Cleaning)
+-- 사용자 입력에서 불필요한 공백과 특수문자 제거
+SELECT 
+    song_title AS original_title,
+    TRIM(REPLACE(REPLACE(song_title, ',', ''), '.', '')) AS clean_title
+FROM
+    songs
+WHERE
+    song_title LIKE '%.%' OR song_title LIKE '%,%';
 
 
+/*
+	1. select song_title as original_title
+	   : 원래 노래 제목 가져옴
 
+	2. TRIM(REPLACE(REPLACE(song_title, ',', ''), '.', ''))
+    
+		: 가장 안쪽: REPLACE(song_title, ',', '') - 먼저 쉼표를 제거합니다.
+		  중간: REPLACE(첫번째_결과, '.', '') - 그 결과에서 마침표를 제거합니다.
+		  바깥쪽: TRIM(두번째_결과) - 마지막으로 앞뒤 공백을 제거합니다.
 
+*/
 
