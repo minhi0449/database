@@ -41,6 +41,22 @@ select instr('2025년 05월', '05');
 
 -- 3. INSTR() : 실무에서 자주 사용하는 함수와 조합
 
+-- 3-1. INSTR() + WHERE 조건절
+-- 'email' 컬럼에 '@gmail' 이 포함된 사용자 검색
+select * from users
+where instr(email, '@gmail') > 0;
+
+
+-- last_name에 'an'이 포함된 직원 조회
+select emp_no, first_name, last_name
+from employees
+where instr(last_name, 'an') > 0
+limit 5; -- 상위 5개 행만 반환
+
+select emp_no, first_name, last_name
+from employees
+where instr(last_name, 'an') > 0;
+
 
 
 
