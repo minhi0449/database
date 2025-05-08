@@ -16,3 +16,9 @@ select e.emp_no, e.first_name, d.dept_no
 from employees e
 inner join dept_emp d on e.emp_no = d.emp_no
 limit 5;
+
+-- 2. LEFT JOIN – 왼쪽 테이블 전체 + 오른쪽 매칭된 값
+SELECT e.emp_no, e.first_name, e.last_name, de.dept_no
+FROM employees e
+LEFT JOIN dept_emp de ON e.emp_no = de.emp_no
+LIMIT 5;
