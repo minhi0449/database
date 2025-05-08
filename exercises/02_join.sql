@@ -7,3 +7,12 @@
 	CROSS JOIN:   [A × B] - A와 B의 모든 조합
 	SELF JOIN:    [A = A] - 동일 테이블을 자신과 조인
 */
+
+-- ------------------------------------------------------------
+-- 1. INNER JOIN: [A ∩ B]
+-- 두 테이블에서 `emp_no` 가 일치하는 데이터만 반환환
+
+select e.emp_no, e.first_name, d.dept_no
+from employees e
+inner join dept_emp d on e.emp_no = d.emp_no
+limit 5;
