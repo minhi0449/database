@@ -169,3 +169,50 @@ select date_format(NOW(), '%Y년 %m월 %d일') as korean_date;
 -- 2. 시간 포함 형식
 select date_format(now(), '%Y-%M-%D %h:%i:%s') as full_datetime;
 -- 결과 : 2025-May-30th 12:35:30
+
+
+SELECT NVL('', '기본값') FROM dual;
+
+
+select year(now()) as 연도,
+month(now()) as 월,
+day(now()) as 일;
+
+
+-- SUBSTRING(문자열, 시작위치, 길이)
+select substring('SQLD 공부중입니다.', 1, 4) as 부분문자열;
+-- 결과 : SQLD
+
+-- LENGTH() - 바이트 길이 (한글3, 영어1)
+select length('AB가') as 바이트길이;
+-- 결과 : 5 (A=1, B=1, 가=3)
+
+-- CHAR_LENGTH() - 문자 개수
+select char_length('AB가') as 문자_개수;
+-- 결과 : 3
+
+-- TRIM() - 앞뒤 공백 제거
+select trim('     hello     ') as 결과;
+
+
+-- ROUND(숫자, 자릿수)
+select round(123.4567, 2) as 반올림;
+-- 결과 : 123.46
+
+-- FLOOR() - 버림
+select floor(123.9) as 버림;
+
+-- CEIL() / CEILING() - 올림
+select ceil(123.1) as 올림;
+-- 결과 : 124
+
+
+
+
+
+
+
+
+
+
+
