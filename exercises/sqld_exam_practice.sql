@@ -208,11 +208,36 @@ select ceil(123.1) as 올림;
 
 
 
+-- ---------------------------------------
+-- 집계 함수
+-- ---------------------------------------
+
+-- COUNT() - 개수 세기
+select count(*) as 직원수 from employees;
+
+-- SUM(), AVG(), MIN(), MAX()
+select 
+sum(salary) as 총급여,
+avg(salary) as 평균급여,
+min(salary) as 최소급여,
+max(salary) as 최대급여
+from salaries;
 
 
+-- ---------------------------------------
+-- 조건/제어 함수
+-- ---------------------------------------
+
+-- IF(조건, 참일때, 거짓일때)
+select emp_no, salary, if(salary >= 100000, '고연봉', '보통') as 연봉등급
+from salaries
+limit 5;
 
 
+-- NULL 처리 함수
+select IFNULL(NULL, '대체값') AS 결과;
+select IFNULL(0, '대체값') AS 결과;
+select IFNULL(0, 0) AS 결과;
 
-
-
-
+select NULLIF(0, 0) as result;
+select NULLIF(0, '대체값') as result;
