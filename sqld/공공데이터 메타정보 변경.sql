@@ -52,7 +52,8 @@
 	</select>
     
     
-    - 모니터링 > 
+
+    -- 모니터링 > 
 -- 1. 데이터 있는지 확인
 SELECT COUNT(*) as total FROM TB_LOG_LINKSRV;
 
@@ -85,8 +86,4 @@ INNER JOIN TB_OPEN_DTTRAN F
 ON E.UPL_SCH_NO = F.UPL_SCH_NO
 AND F.DEL_YN = 'N'
 AND F.PROC_STAT IN ('I','C','E')
-
-
-
-
     
