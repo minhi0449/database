@@ -104,5 +104,92 @@ SELECT
         WHERE GRP_CD = 'D1009'
             AND USE_YN = 'Y'
         ORDER BY V_ORDER;
-
-
+        
+        
+select
+	A.DTFILE_ID as "dtfileId" ,
+	F.DTTRAN_ID as "dttranId" ,
+	E.UPL_SCH_NO as "uplSchNo" ,
+	D.DT_NM as "dtNm" ,
+	D.INF_NM as "infNm" ,
+	A.SHT_NM as "shtNm" ,
+	D.LOAD_CD as "loadCd" ,
+	(
+	select
+		ORG_NM
+	from
+		TB_COMM_ORG
+	where
+		ORG_CD = E.ORG_CD
+		and USE_YN = 'Y') as "orgNm" ,
+	(
+	select
+		USR_NM
+	from
+		TB_COMM_USR
+	where
+		USR_ID = F.REG_ID) as "usrNm" ,
+	(
+	select
+		USR_CD
+	from
+		TB_COMM_USR
+	where
+		USR_ID = F.REG_ID) as "usrCd" ,
+	(
+	select
+		USR_TEL
+	from
+		TB_COMM_USR
+	where
+		USR_ID = F.REG_ID) as "usrTel" ,
+	(
+	select
+		USR_EMAIL
+	from
+		TB_COMM_USR
+	where
+		USR_ID = F.REG_ID) as "usrEmail" ,
+	TO_CHAR(F.END_DTTM, 'YYYY-MM-DD HH24:MI:SS') as "chkDttm" ,
+	TO_CHAR(COALESCE(ROUND((F.END_DTTM-F.STRT_DTTM)* 24 * 60 * 60), 0)) as "chkTm" ,
+	COALESCE(F.CHCK_YN, 'N') as "chckYn" ,
+	decode(F.CHCK_YN, 'N', decode(F.ERR_CNT, 0, F.PROC_RSLT, F.ERR_CNT || ' 건의 오류가 발생하였습니다.'), F.PROC_RSLT) as "procRslt" ,
+	decode(F.PROC_STAT, 'T', '예', 'I', '예(이어서저장하기)', 'P', '예', 'U', '예', 'D', '예', 'M', '예', '아니오') "saveYn" ,
+	F.DATA_COND_DTTM as "dataCondDttm" ,
+	F.LOAD_YMD as "loadYmd"
+from
+	TB_OPEN_DTFILE A
+inner join (
+	select
+		B.INF_ID,
+		B.INF_NM,
+		C.DT_NM,
+		B.LOAD_CD ,
+		B.MULTI_MNG_YN
+	from
+		TB_OPEN_INF B
+	inner join TB_OPEN_DT C on
+		B.DT_ID = C.DT_ID) D on
+	A.INF_ID = D.INF_ID
+	and A.DEL_YN = 'N'
+inner join (
+	select
+		LOAD_YMD ,
+		DTFILE_ID ,
+		UPL_SCH_NO ,
+		ORG_CD
+	from
+		TB_UPLOAD_SCHE
+	where
+		DEL_YN = 'N') E on
+	A.DTFILE_ID = E.DTFILE_ID
+inner join TB_OPEN_DTTRAN F on
+	E.UPL_SCH_NO = F.UPL_SCH_NO
+	and F.DEL_YN = 'N'
+	and F.PROC_STAT in ('I', 'C', 'E', 'P', 'U', 'D', 'M', 'T', 'I')
+where
+	1 = 1
+order by
+	F.DTTRAN_ID desc;
+    
+    
