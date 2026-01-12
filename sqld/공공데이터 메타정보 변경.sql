@@ -191,5 +191,5 @@ where
 	1 = 1
 order by
 	F.DTTRAN_ID desc;
-    
-    
+        
+
