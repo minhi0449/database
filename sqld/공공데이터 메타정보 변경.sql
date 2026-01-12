@@ -85,9 +85,22 @@ ON A.DTFILE_ID = E.DTFILE_ID
 INNER JOIN TB_OPEN_DTTRAN F
 ON E.UPL_SCH_NO = F.UPL_SCH_NO
 AND F.DEL_YN = 'N'
-AND F.PROC_STAT IN ('I','C','E')
-<<<<<<< Updated upstream
-    
-=======
+AND F.PROC_STAT IN ('I','C','E');
 
->>>>>>> Stashed changes
+
+SELECT 
+        DITC_CD AS "code",    -- 코드 값
+        DITC_NM AS "name"     -- 코드 이름
+    FROM TB_COMM_CODE         -- 공통 코드 테이블
+    WHERE GRP_CD = 'D1104'    -- 그룹 코드로 필터링
+        AND USE_YN = 'Y'      -- 사용 여부 = Y
+    ORDER BY V_ORDER;         -- 정렬 순서대로
+
+
+SELECT 
+            DITC_CD AS "code",
+            DITC_NM AS "name"
+        FROM TB_COMM_CODE
+        WHERE GRP_CD = 'D1009'
+            AND USE_YN = 'Y'
+        ORDER BY V_ORDER;
