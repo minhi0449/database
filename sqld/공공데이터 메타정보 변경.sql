@@ -104,5 +104,3 @@ SELECT
         WHERE GRP_CD = 'D1009'
             AND USE_YN = 'Y'
         ORDER BY V_ORDER;
-
-
