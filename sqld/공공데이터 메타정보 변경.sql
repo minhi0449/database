@@ -191,5 +191,28 @@ where
 	1 = 1
 order by
 	F.DTTRAN_ID desc;
+<<<<<<< Updated upstream
         
 
+=======
+    
+    
+WITH ColumnInfo AS (
+    SELECT COL_NM, COL_EXP, COL_SEQ
+    FROM TB_OPEN_DTCOLS 
+    WHERE DTFILE_ID = ${dtfileId} AND DEL_YN = 'N'
+    ORDER BY COL_SEQ
+)
+SELECT 
+    ROW_NUMBER() OVER () AS "rowSeq",
+    -- 각 컬럼을 개별적으로 선택
+    t.*,
+    'Y' AS "nullchckYn",
+    'Y' AS "typechckYn", 
+    'Y' AS "addrToCoordYn",
+    '' AS "errCd",
+    '' AS "errDesc",
+    'N' AS "delYn"
+FROM ${tableName} t
+ORDER BY 1;
+>>>>>>> Stashed changes
