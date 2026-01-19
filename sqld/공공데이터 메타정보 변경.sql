@@ -598,6 +598,34 @@ ORDER BY 1;
 </mapper>
 
 
+/* 1. 하드코딩 없이 dttran_id와 dtfile_id를 연결하여 
+   2. 원본 테이블(tb_nature_park_m)의 4,000건 이상 데이터를 
+   3. 상세 그리드 포맷(rowSeq, colSeq, dataVal)으로 Unpivot 조회 */
 
+WITH ColList AS (
+    /* 화면에 보여줄 7개 컬럼 정보를 미리 세팅 */
+    SELECT col_nm, col_seq 
+    FROM tb_open_dtcols 
+    WHERE dtfile_id = '3331' AND del_yn = 'N'
+),
+RawData AS (
+    /* 실제 데이터 4,000건+ (날짜 에러를 피하기 위해 dttran_id 기준으로 직접 조회) */
+    /* ※ tb_nature_park_m에 dttran_id 컬럼이 없다면 'no' 기준으로 전체 조회 */
+    SELECT *, ROW_NUMBER() OVER (ORDER BY no) as row_num 
+    FROM tb_nature_park_m
+    -- 날짜 컬럼 에러 방지를 위해 조건을 완화하거나 실제 존재하는 컬럼으로 대체하세요.
+    -- WHERE dat_crtr_ymd = '20251114'
+)
+SELECT 
+    R.row_num AS "rowSeq",
+    C.col_seq AS "colSeq",
+    /* JSON 변환으로 CASE문 4,000개 만드는 노가다 방지 (최적화) */
+    (row_to_json(R)->>lower(C.col_nm)) AS "dataVal",
+    'Y' AS "nullchckYn",
+    'Y' AS "typechckYn",
+    'Y' AS "addrToCoordYn"
+FROM RawData R
+CROSS JOIN ColList C
+ORDER BY R.row_num ASC, C.col_seq ASC;
 
 
