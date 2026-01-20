@@ -628,4 +628,85 @@ FROM RawData R
 CROSS JOIN ColList C
 ORDER BY R.row_num ASC, C.col_seq ASC;
 
+<!-- 게시판 목록 조회 -->
+	<select id="selectBoardList" resultType="egovframework.admin.stat.board.model.BoardVO">
+	 	<include refid="egovframework.admin.stat.common.dao.CommonDAO.paging_start" />
+			SELECT ROW_NUMBER() OVER() as NUM, A.*
+			  FROM (  SELECT bbs_bbsid,
+						bbs_seq, bbs_ref, bbs_step, bbs_depth, bbs_title, bbs_tcolor, bbs_tsize, bbs_preview,
+						<if test="bbs_bbsid != null and 'B602'.equals(bbs_bbsid)">
+							bbs_text
+						</if>
+						<if test="bbs_bbsid == null or !'B602'.equals(bbs_bbsid)">
+						bbs_text
+						</if>
+						, bbs_writerid, bbs_writer, bbs_writertype
+					, bbs_email, bbs_homepage, bbs_passwd, bbs_hit, bbs_ishtml, bbs_isnotice, bbs_recomcnt, bbs_memocnt, bbs_filecnt
+					, to_char(bbs_stdate, 'YYYY.MM.DD') AS bbs_stdate, to_char(bbs_enddate, 'YYYY.MM.DD') AS bbs_enddate
+					, bbs_target, bbs_repeat, bbs_uid, bbs_uip, bbs_udate, to_char(bbs_rdate,'YYYY-MM-DD') AS bbs_rdate, bbs_url
+					, CASE WHEN length(bbs_code01) = 8 THEN to_char(to_date(bbs_code01, 'YYYYMMDD'), 'YYYY.MM.DD') ELSE bbs_code01 END as bbs_code01, bbs_code07, bbs_orderby
+					, COALESCE((select file_down from ggportal.MINBOARD210_FILE where file_bbsid=AA.bbs_bbsid and file_seq=AA.bbs_seq and file_fseq=1), 0) down_cnt
+			            FROM ggportal.MINBOARD210_BBS AA
 
+						<trim prefix="WHERE" prefixOverrides="AND|OR">
+							<if test="bbsIdList != null and bbsIdList.size() &gt; 0">
+								bbs_bbsid IN
+								<foreach collection="bbsIdList" item="id" open="(" close=")" separator=", ">
+							       #{id}
+								</foreach>
+							</if>
+
+							<if test="src_publ_yn != null and 'Y'.equals(src_publ_yn)">
+								AND to_char(bbs_rdate, 'YYYY') &gt;= '2010'
+							</if>
+							<if test="src_isKor != null and src_isKor != ''">
+								AND bbs_code07 = #{src_isKor}
+							</if>
+					   		<if test="src_st_dt != null and src_st_dt != ''">
+					      		AND to_char(bbs_stdate, 'yyyyMMdd') &lt;= #{src_st_dt}
+					   		</if>
+					   		<if test="src_ed_dt != null and src_ed_dt != ''">
+					      		AND to_char(bbs_enddate, 'yyyyMMdd') &gt;= #{src_ed_dt}
+					   		</if>
+
+					   		<if test="keyword != null and keyword != ''">
+					    		<if test="searchType != null and 'subject'.equals(searchType)">
+					     			AND upper(bbs_title) like '%' || upper(#{keyword}) || '%'
+					    		</if>
+					    		<if test="searchType != null and 'content'.equals(searchType)">
+					     			AND upper(bbs_text) like '%' || upper(#{keyword}) || '%'
+					    		</if>
+					    		<if test="searchType != null and 'writer'.equals(searchType)">
+					     			AND upper(bbs_writer) like '%' || upper(#{keyword}) || '%'
+								</if>
+					    		<if test="searchType != null and 'bbs_year'.equals(searchType)">
+					     			AND upper(replace(bbs_code01, '.', '')) like '%' || upper(#{keyword}) || '%'
+					    		</if>
+					   		</if>
+
+							<if test="bbs_bbsid != null and 'B603'.equals(bbs_bbsid)">
+								<if test="bbs_isnotice != null and bbs_isnotice != ''">
+								 	AND bbs_isnotice = #{bbs_isnotice}
+								</if>
+							</if>
+						</trim>
+
+						<if test="orderby != null and orderby != ''">
+					   		ORDER BY ${orderby}
+					   </if>
+						<if test="orderby == null or orderby == ''">
+							<if test="bbs_bbsid == null or !'B303'.equals(bbs_bbsid)">
+					   			ORDER BY BBS_RDATE
+							</if>
+							<if test="bbs_bbsid != null and 'B303'.equals(bbs_bbsid)">
+								ORDER BY BBS_CODE01
+							</if>
+					   </if>
+		 ) A
+			<if test="desc == null or desc == ''">order by NUM desc</if>
+			<if test="desc != null and desc != ''">
+				order by NUM
+				<if test="desc != null and 'Y'.equals(desc)"> desc</if>
+			</if>
+        <include refid="egovframework.admin.stat.common.dao.CommonDAO.paging_end" />
+	</select>
