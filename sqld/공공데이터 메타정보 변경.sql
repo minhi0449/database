@@ -710,3 +710,223 @@ ORDER BY R.row_num ASC, C.col_seq ASC;
 			</if>
         <include refid="egovframework.admin.stat.common.dao.CommonDAO.paging_end" />
 	</select>
+    
+    
+    <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.admin.stat.system.dao.SystemDAO">
+
+	<!-- 코드 목록 조회 -->
+	<select id="selectCodeListStat" resultType="egovframework.admin.stat.system.model.CodeVO">
+		select code_id, up_code, code_name, code_eng_name, code_prop, code_sn
+		       from ggportal.tg_code
+		       where 1=1
+	<if test="use_at != null and use_at != ''">
+		AND use_at = #{use_at}
+	</if>
+	<if test="up_code != null and up_code != ''">
+		AND up_code = #{up_code}
+		ORDER BY code_sn ASC
+	</if>
+	<if test="(up_code == null or up_code == '')">
+		AND up_code IS NULL
+		<if test="keyword != null and keyword != ''">
+			AND (upper(code_id) LIKE '%' || upper(#{keyword}) || '%' 
+			     OR upper(code_name) LIKE '%' || upper(#{keyword}) || '%')
+		</if>
+	</if>
+	<if test="sel_code_id == 'CODE_ID'">
+		ORDER BY code_id ASC
+	</if>
+	<if test="sel_code_id == 'CODE_NAME'">
+		ORDER BY code_name ASC
+	</if>
+	</select>
+
+	<!-- 상위코드정렬구분자 -->
+	<select id="selcodeList" resultType="egovframework.admin.stat.system.model.CodeVO">
+		 SELECT column_name as sel_code_id, comments as comments FROM ALL_COL_COMMENTS WHERE TABLE_NAME = 'TG_CODE' AND COLUMN_NAME LIKE 'CODE_%' AND COMMENTS LIKE '코드%' AND COMMENTS NOT LIKE '코드 %'
+	</select>
+
+	<!-- 코드 목록 조회 -->
+	<select id="selectPropCodeList" resultType="egovframework.admin.stat.system.model.CodeVO">
+        select code_id, up_code, code_name, code_eng_name, code_prop, code_sn
+               from tg_code  where up_code = (select code_prop from tg_code where code_id=#{code_id})  order by code_sn, code_id
+	</select>
+
+	<!-- 상위코드 상세조회 -->
+	<select id="codeTopView" resultType="egovframework.admin.stat.system.model.CodeVO">
+		select code_id, up_code, code_name, code_eng_name, code_sn, code_desc, code_eng_desc, code_prop, use_at from tg_code where code_id=#{code_id}
+	</select>
+
+	<!-- 하위코드 상세조회 -->
+	<select id="codeLowerEdit" resultType="egovframework.admin.stat.system.model.CodeVO">
+		select code_id, up_code, code_name, code_eng_name, code_sn, code_desc, code_eng_desc, code_prop, use_at from tg_code where code_id=#{code_id} and up_code is not null
+	</select>
+
+	<!-- 하위코드 리스트 -->
+	<select id="detailEdit" resultType="egovframework.admin.stat.system.model.CodeVO">
+		select code_id as Lower_code_id, up_code as Lower_up_code, code_name as Lower_code_name, code_eng_name as Lower_code_eng_name, code_prop as Lower_code_prop, code_sn as Lower_code_sn
+			from tg_code
+			where up_code=#{up_code}
+	<if test="lower_keyword != null and lower_keyword != ''">
+		AND (upper(code_id) LIKE '%' || upper(#{lower_keyword}) || '%'
+		     OR upper(code_name) LIKE '%' || upper(#{lower_keyword}) || '%')
+	</if>
+		order by code_sn, code_id
+	</select>
+
+	<!-- 상위코드 입력 -->
+	<insert id="codeTopInsert" parameterType="egovframework.admin.stat.system.model.CodeVO">
+		insert into tg_code (code_id,code_name,code_eng_name,up_code,code_prop,code_sn,code_desc,code_eng_desc,use_at)
+			   values(UPPER(#{code_id}),#{code_name},#{code_eng_name}, UPPER(#{up_code}),UPPER(#{code_prop}),#{code_sn},#{code_desc},#{code_eng_desc},#{use_at})
+	</insert>
+
+	<!-- 하위코드 입력 -->
+	<insert id="codeLowerInsert" parameterType="egovframework.admin.stat.system.model.CodeVO">
+		insert into tg_code (code_id, code_name,up_code,code_prop,code_sn,code_desc,code_eng_desc,use_at)
+			   values(UPPER(#{lower_code_id}),#{lower_code_name},#{code_eng_name}, UPPER(#{lower_up_code}),UPPER(#{lower_code_prop}),#{code_sn},#{code_desc},#{code_eng_desc},#{use_at})
+	</insert>
+
+	<!-- 상위코드삭제 -->
+	<delete id="codeTopDeleteMulti" parameterType="egovframework.admin.stat.system.model.CodeVO">
+		delete from tg_code where code_id = #{cont_num} or up_code=#{cont_num}
+	</delete>
+
+	<!-- 하위코드 삭제 -->
+	<delete id="codeLowerDeleteMulti" parameterType="egovframework.admin.stat.system.model.CodeVO">
+		delete from tg_code where code_id = #{cont_num} and up_code is not null
+	</delete>
+
+	<!-- 상위코드 수정 -->
+	<update id="codeTopUpdate" parameterType="egovframework.admin.stat.system.model.CodeVO">
+		update  tg_code
+		set code_id=UPPER(#{code_id}),
+			code_name=#{code_name},
+			code_eng_name=#{code_eng_name},
+			up_code=UPPER(#{up_code}),
+			code_prop=UPPER(#{code_prop}),
+			code_sn=#{code_sn},
+			code_desc=#{code_desc},
+			code_eng_desc=#{code_eng_desc},
+			use_at=#{use_at}
+		where code_id = #{top_code_id} and up_code is null
+	</update>
+
+	<!-- 상위코드 수정시 하위코드의 상위코드 수정 -->
+	<update id="upCodeLowerUpdate" parameterType="egovframework.admin.stat.system.model.CodeVO">
+			update  tg_code
+		set up_code=UPPER(#{code_id})
+		where up_code = #{top_code_id}
+	</update>
+
+	<!-- 하위코드 수정 -->
+	<update id="codeLowerUpdate" parameterType="egovframework.admin.stat.system.model.CodeVO">
+		update  tg_code
+		set code_id=UPPER(#{code_id}),
+			code_name=#{code_name},
+			code_eng_name=#{code_eng_name},
+			up_code=UPPER(#{up_code}),
+			code_prop=UPPER(#{code_prop}),
+			code_sn=#{code_sn},
+			code_desc=#{code_desc},
+			code_eng_desc=#{code_eng_desc},
+			use_at=#{use_at}
+		where code_id = #{lower_code_id} and up_code is not null
+	</update>
+
+	<!-- 코드 순번 count -->
+	<select id="selectCodeSnCount" resultType="java.lang.Integer">
+		select count(*) from tg_code where up_code = #{up_code}
+	</select>
+	
+	<!-- Ip관리 목록 조회 -->
+	<select id="selectIpMngtList" resultType="egovframework.admin.stat.system.model.IPMngtVO">
+	 	<include refid="egovframework.admin.stat.common.dao.CommonDAO.paging_start" />
+			SELECT 
+				MNGT_IP, IP_NM, USER_NM, IP_CN, USE_AT, REG_ID, 
+				REG_IP, REG_DATE, MOD_ID, MOD_DATE
+			FROM TG_IP_MNGT
+			WHERE 1=1
+	<if test="keyword != null and keyword != ''">
+		<if test="searchType == 'mngt_ip'">
+			AND mngt_ip LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchType == 'ip_nm'">
+			AND ip_nm LIKE '%' || #{keyword} || '%'
+		</if>
+	</if>
+			ORDER BY IP_NM, MNGT_IP
+        <include refid="egovframework.admin.stat.common.dao.CommonDAO.paging_end" />
+	</select>
+
+	<!-- IP관리 상세 조회 -->
+	<select id="selectIpMngtDetail" resultType="egovframework.admin.stat.system.model.IPMngtVO">
+			SELECT 
+				MNGT_IP, IP_NM, USER_NM, IP_CN, USE_AT, REG_ID, 
+				REG_IP, REG_DATE, MOD_ID, MOD_DATE
+			FROM TG_IP_MNGT
+		    WHERE MNGT_IP=#{mngt_ip}
+	</select>
+
+	<!-- IP관리 내용 입력 -->
+	<insert id="insertIpMngt">
+		<![CDATA[
+			INSERT INTO TG_IP_MNGT (
+			   	MNGT_IP, 
+			   	IP_NM, 
+			   	USER_NM, 
+			   	IP_CN, 
+			   	USE_AT, 
+			   	REG_ID, 
+			   	REG_IP, 
+			   	REG_DATE
+			) VALUES ( 
+				#{mngt_ip},
+			 	#{ip_nm},
+			 	#{user_nm},
+			 	#{ip_cn},
+				#{use_at},
+				#{reg_id},
+				#{reg_ip},
+				SYSDATE
+			)
+		]]>
+	</insert>
+
+	<!-- IP관리 내용 수정 -->
+	<update id="updateIpMngt">
+		UPDATE TG_IP_MNGT
+		SET    IP_NM    = #{ip_nm},
+		       USER_NM  = #{user_nm},
+		       IP_CN    = #{ip_cn},
+		       USE_AT   = #{use_at},
+		       MOD_ID   = #{mod_id},
+		       MOD_DATE = SYSDATE
+		WHERE MNGT_IP = #{mngt_ip}
+	</update>
+
+	<!-- IP관리 내용 삭제 -->
+	<delete id="deleteIpMngt">
+		DELETE FROM TG_IP_MNGT
+		WHERE MNGT_IP = #{mngt_ip}
+	</delete>
+
+	<!-- IP 개수 조회 -->
+	<select id="selectIpCount" resultType="int">
+		SELECT COUNT(*)
+		FROM TG_IP_MNGT
+		WHERE MNGT_IP = #{mngt_ip}
+	</select>
+	
+	<!-- Ip 사용 목록 조회 -->
+	<select id="selectIpMngtUseList" resultType="egovframework.admin.stat.system.model.IPMngtVO">
+			SELECT 
+				MNGT_IP, IP_NM, USER_NM, IP_CN, USE_AT, REG_ID, 
+				REG_IP, REG_DATE, MOD_ID, MOD_DATE
+			FROM TG_IP_MNGT
+			WHERE USE_AT='Y'
+			ORDER BY MNGT_IP
+	</select>
+</mapper>
