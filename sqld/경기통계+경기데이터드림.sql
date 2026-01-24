@@ -87,4 +87,37 @@ INNER JOIN TB_OPEN_DTTRAN F
     AND F.DEL_YN = 'N'
     AND F.PROC_STAT IN ('I', 'C', 'E', 'P', 'U', 'D', 'M', 'T', 'I')
 WHERE 1 = 1
-ORDER BY F.DTTRAN_ID DESC
+ORDER BY F.DTTRAN_ID DESC;
+
+
+
+
+
+
+-- 주소정제
+SELECT
+    B.INF_NM AS "refOpnDtNm",
+    ( SELECT H.DITC_NM
+      FROM TB_COMM_CODE H
+      WHERE H.GRP_CD = 'C1001'
+      AND H.DITC_CD = A.SIGUN_CD) AS "refOrg",
+    ( SELECT H.DITC_NM
+      FROM TB_COMM_CODE H
+      WHERE H.GRP_CD = 'D1009'
+      AND H.DITC_CD = B.LOAD_CD) AS "refLoadCd",
+    A.TOT_CNT AS "refDealCnt",
+    A.REFINE_VAL_CNT AS "refsucc",
+    A.REFINE_ERR_CNT AS "refFail",
+    A.REFINE_PER AS "refPerc",
+    A.COORD_PER AS "refCrdPerc",
+    A.DS_ID AS "refOpnDtId",
+    TO_CHAR(A.REFINE_DTTM, 'YYYY-MM-DD HH24:MI:SS') AS "refLastDttm"
+FROM tb_stat_refine A 
+INNER JOIN TB_OPEN_INF B ON A.DS_ID = B.DS_ID
+INNER JOIN TB_COMM_ORG C ON A.SIGUN_CD = C.TYPE_CD
+WHERE 1=1
+    AND B.INF_STATE = 'Y'
+    AND B.OPEN_DTTM <= NOW()  
+    AND A.YYYYMM = TO_CHAR(NOW(),'YYYYMM') 
+ORDER BY A.REFINE_DTTM DESC;
+
