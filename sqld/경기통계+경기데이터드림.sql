@@ -121,3 +121,71 @@ WHERE 1=1
     AND A.YYYYMM = TO_CHAR(NOW(),'YYYYMM') 
 ORDER BY A.REFINE_DTTM DESC;
 
+SELECT
+    A.DTFILE_ID AS "dtfileId",
+    F.DTTRAN_ID AS "dttranId",
+    E.UPL_SCH_NO AS "uplSchNo",
+    D.DT_NM AS "dtNm",
+    D.INF_NM AS "infNm",
+    A.SHT_NM AS "shtNm",
+    D.LOAD_CD AS "loadCd",
+    
+    CO.ORG_NM AS "orgNm",
+    CU.USR_NM AS "usrNm",
+    CU.USR_CD AS "usrCd",
+    CU.USR_TEL AS "usrTel",
+    CU.USR_EMAIL AS "usrEmail",
+    
+    TO_CHAR(F.END_DTTM, 'YYYY-MM-DD HH24:MI:SS') AS "chkDttm",
+    
+    COALESCE(
+        ROUND(EXTRACT(EPOCH FROM (F.END_DTTM - F.STRT_DTTM)))::text,
+        '0'
+    ) AS "chkTm",
+    
+    COALESCE(F.CHCK_YN, 'N') AS "chckYn",
+    CASE 
+        WHEN F.CHCK_YN = 'N' THEN 
+            CASE 
+                WHEN F.ERR_CNT = 0 THEN F.PROC_RSLT 
+                ELSE F.ERR_CNT::text || ' 건의 오류가 발생하였습니다.' 
+            END
+        ELSE F.PROC_RSLT 
+    END AS "procRslt",
+    CASE 
+        WHEN F.PROC_STAT IN ('T', 'P', 'U', 'D', 'M') THEN '예'
+        WHEN F.PROC_STAT = 'I' THEN '예(이어서저장하기)'
+        ELSE '아니오'
+    END AS "saveYn",
+    F.DATA_COND_DTTM AS "dataCondDttm",
+    F.LOAD_YMD AS "loadYmd"
+FROM TB_OPEN_DTFILE A
+INNER JOIN (
+    SELECT
+        B.INF_ID,
+        B.INF_NM,
+        C.DT_NM,
+        B.LOAD_CD,
+        B.MULTI_MNG_YN
+    FROM TB_OPEN_INF B
+    INNER JOIN TB_OPEN_DT C ON B.DT_ID = C.DT_ID
+) D ON A.INF_ID = D.INF_ID AND A.DEL_YN = 'N'
+INNER JOIN (
+    SELECT
+        LOAD_YMD,
+        DTFILE_ID,
+        UPL_SCH_NO,
+        ORG_CD
+    FROM TB_UPLOAD_SCHE
+    WHERE DEL_YN = 'N'
+) E ON A.DTFILE_ID = E.DTFILE_ID
+INNER JOIN TB_OPEN_DTTRAN F 
+    ON E.UPL_SCH_NO = F.UPL_SCH_NO
+    AND F.DEL_YN = 'N'
+    AND F.PROC_STAT IN ('I', 'C', 'E', 'P', 'U', 'D', 'M', 'T')
+    
+LEFT JOIN TB_COMM_ORG CO ON CO.ORG_CD = E.ORG_CD AND CO.USE_YN = 'Y'
+LEFT JOIN TB_COMM_USR CU ON CU.USR_ID = F.REG_ID
+
+WHERE 1 = 1
+ORDER BY F.DTTRAN_ID DESC;
