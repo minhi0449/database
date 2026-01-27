@@ -234,3 +234,35 @@ WHERE 1 = 1
   AND B.INF_NM LIKE '%' || $1 || '%'
 
 ORDER BY A.REFINE_DTTM DESC;
+
+
+	-- 스키마 목록 조회
+SELECT schema_name 
+FROM information_schema.schemata 
+WHERE schema_name ILIKE 'ggopengov';
+	
+	
+	SELECT COUNT(*) 
+FROM TB_COMM_ORG 
+WHERE USE_YN = 'Y';
+
+WITH RECURSIVE org_tree AS (
+    SELECT 
+        A.ORG_CD,
+        A.ORG_NM,
+        1 AS ORG_LVL
+    FROM TB_COMM_ORG A
+    WHERE A.USE_YN = 'Y'
+        AND A.ORG_CD_PAR IS NULL
+    
+    UNION ALL
+    
+    SELECT 
+        child.ORG_CD,
+        child.ORG_NM,
+        parent.ORG_LVL + 1
+    FROM TB_COMM_ORG child
+    INNER JOIN org_tree parent ON child.ORG_CD_PAR = parent.ORG_CD
+    WHERE child.USE_YN = 'Y'
+)
+SELECT COUNT(*) FROM org_tree;
