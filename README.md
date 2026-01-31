@@ -13,6 +13,7 @@ MySql, PostgreSql, Oracle, SQLServer, HANA DB
 | **models** | 주요 데이터베이스 모델 파일 |
 | **sqld** | SQLD 자격시험 대비 학습 (함수 사용 예제 등) |
 | **query-optimization** | PostgreSQL 중심 쿼리 성능 분석 및 최적화 학습 |
+| 문법 |
 
 ## › 학습 목차
 
