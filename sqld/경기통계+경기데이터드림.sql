@@ -266,3 +266,30 @@ WITH RECURSIVE org_tree AS (
     WHERE child.USE_YN = 'Y'
 )
 SELECT COUNT(*) FROM org_tree;
+
+
+-- 1. 재귀 쿼리로 조회되는 데이터
+WITH RECURSIVE org_tree AS (
+    SELECT 
+        A.ORG_CD,
+        A.ORG_NM,
+        A.ORG_CD_PAR,
+        1 AS ORG_LVL
+    FROM TB_COMM_ORG A
+    WHERE A.USE_YN = 'Y'
+        AND A.ORG_CD_PAR IS NULL
+    
+    UNION ALL
+    
+    SELECT 
+        child.ORG_CD,
+        child.ORG_NM,
+        child.ORG_CD_PAR,
+        parent.ORG_LVL + 1
+    FROM TB_COMM_ORG child
+    INNER JOIN org_tree parent ON child.ORG_CD_PAR = parent.ORG_CD
+    WHERE child.USE_YN = 'Y'
+)
+SELECT ORG_CD, ORG_NM, ORG_CD_PAR, ORG_LVL
+FROM org_tree
+ORDER BY ORG_CD;
