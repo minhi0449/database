@@ -293,3 +293,19 @@ WITH RECURSIVE org_tree AS (
 SELECT ORG_CD, ORG_NM, ORG_CD_PAR, ORG_LVL
 FROM org_tree
 ORDER BY ORG_CD;
+
+-- 1. 현재 URL에 대한 메뉴 확인
+SELECT * 
+FROM TB_COMM_MENU 
+WHERE MENU_URL = '/dream/refStat/refStatPage.do';
+
+-- 2. 해당 메뉴의 권한 확인
+SELECT M.MENU_ID, M.MENU_NM, MA.ACC_CD, MA.MENU_ACC
+FROM TB_COMM_MENU M
+LEFT JOIN TB_COMM_MENUACC MA ON M.MENU_ID = MA.MENU_ID
+WHERE M.MENU_URL = '/dream/refStat/refStatPage.do';
+
+-- 3. 사용 가능한 권한코드 확인
+SELECT DISTINCT ACC_CD 
+FROM TB_COMM_MENUACC 
+WHERE MENU_ACC != '0';
