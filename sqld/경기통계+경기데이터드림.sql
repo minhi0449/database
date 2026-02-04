@@ -309,3 +309,66 @@ WHERE M.MENU_URL = '/dream/refStat/refStatPage.do';
 SELECT DISTINCT ACC_CD 
 FROM TB_COMM_MENUACC 
 WHERE MENU_ACC != '0';
+
+-- 방법 1: psql 명령어
+\d+ tb_stat_use_act
+
+-- 방법 2: SQL 쿼리
+SELECT 
+    a.attname AS column_name,
+    pg_catalog.col_description(a.attrelid, a.attnum) AS comment
+FROM 
+    pg_catalog.pg_attribute a
+WHERE 
+    a.attrelid = 'tb_stat_use_act'::regclass
+    AND a.attnum > 0 
+    AND NOT a.attisdropped
+    AND a.attname LIKE '%cnt';
+
+select
+	count(B.INF_NM)
+from
+	tb_stat_refine A
+inner join TB_OPEN_INF B on
+	A.DS_ID = B.DS_ID
+inner join TB_COMM_ORG C on
+	A.SIGUN_CD = C.TYPE_CD
+where
+	1 = 1
+	and B.INF_STATE = 'Y'
+	and B.OPEN_DTTM <= NOW()
+	and A.YYYYMM = TO_CHAR(NOW(), 'YYYYMM')
+	and C.ORG_CD = '6410000'
+
+
+
+select
+	count(B.INF_NM)
+from
+	tb_stat_refine A
+inner join TB_OPEN_INF B on
+	A.DS_ID = B.DS_ID
+inner join TB_COMM_ORG C on
+	A.SIGUN_CD = C.TYPE_CD
+where
+	1 = 1
+	and B.INF_STATE = '11'
+	and B.OPEN_DTTM <= NOW()
+	and A.YYYYMM = TO_CHAR(NOW(), '202511')
+	and C.ORG_CD = '6410000'
+
+
+select
+    count(B.INF_NM)
+from
+    tb_stat_refine A
+inner join TB_OPEN_INF B on
+    A.DS_ID = B.DS_ID
+inner join TB_COMM_ORG C on
+    A.SIGUN_CD = C.TYPE_CD
+where
+    1 = 1
+    and B.INF_STATE = '11'
+    and B.OPEN_DTTM <= NOW()
+    and A.YYYYMM = TO_CHAR(NOW(), 'YYYYMM')
+    and C.ORG_CD = '6410000';
