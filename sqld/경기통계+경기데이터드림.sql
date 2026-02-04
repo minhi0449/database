@@ -1,4 +1,4 @@
-SELECT
+	SELECT
     A.DTFILE_ID AS "dtfileId",
     F.DTTRAN_ID AS "dttranId",
     E.UPL_SCH_NO AS "uplSchNo",
@@ -372,3 +372,30 @@ where
     and B.OPEN_DTTM <= NOW()
     and A.YYYYMM = TO_CHAR(NOW(), 'YYYYMM')
     and C.ORG_CD = '6410000';
+
+select
+    count(*)
+from
+    tb_stat_refine A
+inner join TB_OPEN_INF B on
+    A.DS_ID = B.DS_ID
+inner join TB_COMM_ORG C on
+    A.SIGUN_CD = C.TYPE_CD
+where
+    B.INF_STATE = '11'
+    and B.OPEN_DTTM <= NOW()
+    and A.YYYYMM = '202511'
+    and C.ORG_CD = '6410000';
+
+
+
+select count(*)
+from tb_stat_refine
+where yyyymm = '202511';
+
+
+select count(*)
+from TB_OPEN_INF
+where open_dttm <= now()
+  and inf_state = '11';
+
