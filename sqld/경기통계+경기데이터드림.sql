@@ -373,7 +373,6 @@ where
     and A.YYYYMM = TO_CHAR(NOW(), 'YYYYMM')
     and C.ORG_CD = '6410000';
 
-
 select
     count(*)
 from
