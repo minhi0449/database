@@ -400,3 +400,50 @@ from TB_OPEN_INF
 where open_dttm <= now()
   and inf_state = '11';
 
+select distinct a.sigun_cd
+from tb_stat_refine a
+where yyyymm = '202511';
+
+
+select distinct type_cd
+from tb_comm_org;
+
+
+select count(*) from TB_OPEN_INF;
+select distinct inf_state from TB_OPEN_INF;
+select min(open_dttm), max(open_dttm)
+from TB_OPEN_INF;
+
+
+
+select *
+from TB_STAT_REFINE A
+join TB_OPEN_INF B on A.DS_ID = B.DS_ID
+limit 10;
+
+
+
+-- TB_OPEN_INF 상태 값 목록
+select 'INF_STATE' as field, inf_state, count(*) 
+from TB_OPEN_INF
+group by inf_state
+order by count(*) desc;
+
+-- 날짜 범위 확인
+select min(open_dttm) as min_date, max(open_dttm) as max_date
+from TB_OPEN_INF;
+
+-- DS_ID 값 범위 확인
+select count(*), count(distinct ds_id) 
+from TB_OPEN_INF;
+
+-- YYYYMM이 실제 어떤 값이 있는지 (실제 년월 데이터인지 확인)
+select distinct yyyymm 
+from TB_STAT_REFINE
+order by yyyymm;
+
+-- SIGUN_CD 값 목록
+select distinct sigun_cd 
+from TB_STAT_REFINE
+order by sigun_cd;
+
