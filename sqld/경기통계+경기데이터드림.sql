@@ -373,6 +373,7 @@ where
     and A.YYYYMM = TO_CHAR(NOW(), 'YYYYMM')
     and C.ORG_CD = '6410000';
 
+
 select
     count(*)
 from
@@ -473,6 +474,39 @@ FROM (
             TO_CHAR(REG_DTTM, 'YYYYMMDD') BETWEEN 
                 TO_CHAR(TO_DATE('2025-11-01', 'YYYY-MM-DD'), 'YYYYMMDD')
             AND TO_CHAR(TO_DATE('2025-11-01', 'YYYY-MM-DD') + INTERVAL '1 day', 'YYYYMMDD')
+            AND USER_IP NOT LIKE '0:%' 
+            AND USER_IP NOT IN ('192.168.24.120', '127.0.0.1')
+            AND SYS_TAG = 'K'
+    ) TB
+) SUB
+WHERE RN BETWEEN 1 AND 20;
+
+SELECT *
+FROM (
+    SELECT 
+        ROW_NUMBER() OVER(ORDER BY REG_DTTM DESC) AS RN,
+        TB.*
+    FROM (
+        SELECT 
+            COUNT(*) OVER() AS TOT_CNT
+            ,CASE 
+                WHEN SYS_TAG = 'K' THEN 'PC'
+                WHEN SYS_TAG = 'E' THEN '영문'
+                WHEN SYS_TAG = 'M' THEN '모바일'
+                ELSE ''
+            END AS SYS_TAG
+            ,CASE 
+                WHEN USER_IP = '0:0:0:0:0:0:0:1' THEN '127.0.0.1'
+                ELSE USER_IP 
+            END AS USER_IP
+            ,MENU_URL
+            ,MENU_NM
+            ,TO_CHAR(REG_DTTM, 'YYYY-MM-DD HH24:MI:SS') AS REG_DTTM
+        FROM TB_LOG_MENU
+        WHERE 
+            -- ✅ 빠름: 날짜를 직접 비교
+            REG_DTTM >= TO_DATE('2025-11-01', 'YYYY-MM-DD')
+            AND REG_DTTM < TO_DATE('2025-11-01', 'YYYY-MM-DD') + INTERVAL '1 day'
             AND USER_IP NOT LIKE '0:%' 
             AND USER_IP NOT IN ('192.168.24.120', '127.0.0.1')
             AND SYS_TAG = 'K'
