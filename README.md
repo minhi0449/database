@@ -1,7 +1,7 @@
 aw# Database Study  
 > 데이터베이스 공부 및 SQL 실습 (`연습문제`, `ERD 모델링`)
 MySql, PostgreSql, Oracle, SQLServer, Hana DB
-, Tibreo, SQLD, MSSql
+, Tibreo, SQLD, MSSql,
 
 ## › 프로젝트 구성
 
